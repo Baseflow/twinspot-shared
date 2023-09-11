@@ -1,0 +1,134 @@
+syntax = "proto3";
+
+package buildings;
+
+import "google/protobuf/struct.proto";
+
+service BuildingService {
+  rpc GetBuildings (Empty) returns (BuildingListResponse);
+  rpc GetOwnedBuildings (OwnedBuildingsRequest) returns (BuildingListResponse);
+  rpc GetBuildingByCadastralId (GetBuildingByCadastralIdRequest) returns (BuildingSingleResponse);
+
+  rpc InsertBuilding (InsertBuildingRequest) returns (BuildingSingleResponse);
+  rpc DeleteBuilding (DeleteBuildingRequest) returns (Empty);
+  rpc GetBuildingsByMetadata (GetBuildingsByMetadataRequest) returns (BuildingListResponse);
+  rpc GetBuildingsByMetadataKey (GetBuildingsByMetadataKeyRequest) returns (BuildingListResponse);
+  rpc UpdateBuildingMetadata (UpdateBuildingMetadataRequest) returns (BuildingSingleResponse);
+  rpc DeleteBuildingMetadata (DeleteBuildingMetadataRequest) returns (BuildingSingleResponse);
+
+  rpc GetPresignedPutLink (PresignedLinkRequest) returns (PresignedLinkResponse);
+  rpc GetPresignedGetLink (PresignedLinkRequest) returns (PresignedLinkResponse);
+
+  rpc InsertBuildingElements (InsertBuildingElementsRequest) returns (Empty);
+  rpc GetBuildingElements (GetBuildingElementsRequest) returns (BuildingElementsListResponse);
+  rpc GetBuildingElement (GetBuildingElementRequest) returns (BuildingElementSingleResponse);
+  rpc UpdateBuildingElement (UpdateBuildingElementRequest) returns (BuildingElementSingleResponse);
+  rpc DeleteBuildingElements (DeleteBuildingElementsRequest) returns (Empty);
+}
+
+message DeleteBuildingElementsRequest {
+    repeated string ids = 1;
+}
+
+message UpdateBuildingElementRequest {
+    BuildingElement building_element = 1;
+}
+
+message BuildingElementSingleResponse {
+    BuildingElement building_element = 1;
+}
+
+message BuildingElementsListResponse {
+    repeated BuildingElement building_elements = 1;
+}
+
+message GetBuildingElementRequest {
+    string building_element_id = 1;
+}
+
+message GetBuildingElementsRequest {
+    string building_id = 1;
+}
+
+message InsertBuildingElementsRequest {
+    repeated BuildingElement building_elements = 1;
+}
+
+message BuildingElement {
+    string guid = 1;
+    string building_id = 2;
+    string type = 3;
+    repeated uint32 meshes = 4;
+    google.protobuf.Struct properties = 5;
+}
+
+message DeleteBuildingRequest {
+    string id = 1;
+}
+
+message DeleteBuildingMetadataRequest {
+    string id = 1;
+    repeated string keys = 2;
+}
+
+message PresignedLinkResponse {
+    string link = 1;
+}
+
+message PresignedLinkRequest {
+    string id = 1;
+    string file_path = 2;
+}
+
+message OwnedBuildingsRequest {
+    string owner_id = 1;
+}
+
+message GetBuildingsByMetadataKeyRequest {
+    string owner_id = 1;
+    string metadata_key = 2;
+}
+
+message GetBuildingsByMetadataRequest {
+    string owner_id = 1;
+    google.protobuf.Struct metadata = 2;
+}
+
+message InsertBuildingRequest {
+    string cadastral_id = 1;
+    string owner_id = 2;
+}
+
+message UpdateBuildingMetadataRequest {
+    string id = 1;
+    google.protobuf.Struct metadata = 2;
+}
+
+message GetBuildingByCadastralIdRequest {
+    string cadastral_id = 1;
+    string owner_id = 2;
+}
+
+message BuildingSingleResponse {
+    optional Building building = 1;
+}
+
+message BuildingSingleRequest {
+    Building building = 1;
+}
+
+message BuildingListResponse {
+    repeated Building buildings = 1;
+}
+
+
+message Building {
+    string id = 1;
+    string cadastral_id = 2;
+    string bucket_id = 3;
+    string owner_id = 4;
+    google.protobuf.Struct metadata = 5;
+}
+
+message Empty {}
+

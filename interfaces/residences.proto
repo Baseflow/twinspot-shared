@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package residences;
+
+import "google/protobuf/struct.proto";
+
+service ResidenceService {
+  rpc ListResidences (Empty) returns (ResidenceListResponse);
+  rpc GetResidenceByResidenceId (ResidenceByIdRequest) returns (ResidenceSingleResponse);
+  rpc InsertResidence (Residence) returns (ResidenceSingleResponse);
+  rpc GetResidenceByMetadata (ResidenceByMetadataRequest) returns (ResidenceListResponse);
+  rpc GetResidenceByMetadataKey (ResidenceByMetadataKeyRequest) returns (ResidenceListResponse);
+  rpc GetOwnedResidence (OwnedResidenceRequest) returns (ResidenceListResponse);
+  rpc UpdateResidenceMetadata (ResidenceMetadataUpdateRequest) returns (Empty);
+  rpc DeleteResidenceMetadata (DeleteResidenceMetadataRequest) returns (Empty);
+  rpc DeleteResidence (DeleteResidenceRequest) returns (Empty);
+  rpc GetPresignedPutLink (PresignedPutLinkRequest) returns (PresignedPutLinkResponse);
+  rpc GetPresignedGetLink (PresignedGetLinkRequest) returns (PresignedGetLinkResponse);
+  rpc AddBuildingElements (AddBuildingElementsRequest) returns (Empty);
+  rpc GetBuildingElements (GetBuildingElementsRequest) returns (GetBuildingElementsResponse);
+  rpc UpdateBuildingElement (UpdateBuildingElementRequest) returns (Empty);
+}
+
+message UpdateBuildingElementRequest {
+    BuildingElement building_element = 1;
+}
+
+message GetBuildingElementsResponse {
+    repeated BuildingElement building_elements = 1;
+}
+
+message GetBuildingElementsRequest {
+    string building_id = 1;
+}
+
+message AddBuildingElementsRequest {
+    repeated BuildingElement building_elements = 1;
+}
+
+message BuildingElement {
+    string guid = 1;
+    string residence_id = 2;
+    string type = 3;
+    google.protobuf.Struct meshes = 4;
+    google.protobuf.Struct properties = 5;
+}
+
+message DeleteResidenceRequest {
+    string building_id = 1;
+    string owner_id = 2;
+}
+
+message DeleteResidenceMetadataRequest {
+    repeated string keys = 1;
+    string building_id = 2;
+    string owner_id = 3;    
+}
+
+message PresignedGetLinkResponse {
+    string link = 1;
+}
+
+message PresignedGetLinkRequest {
+    string file_path = 1;
+}    
+
+message PresignedPutLinkResponse {
+    string link = 1;
+}
+
+message PresignedPutLinkRequest {
+    string file_path = 1;
+}
+
+message OwnedResidenceRequest {
+    string owner_id = 1;
+}
+
+message ResidenceByMetadataKeyRequest {
+    string owner_id = 1;
+    string metadata_key = 2;
+}
+
+message ResidenceByMetadataRequest {
+    string owner_id = 1;
+    google.protobuf.Struct metadata = 2;
+}
+
+message NewResidenceRequest {
+    string building_id = 1;
+    string owner_id = 2;
+}
+
+message ResidenceMetadataUpdateRequest {
+    string building_id = 1;
+    string owner_id = 2;
+    google.protobuf.Struct metadata = 3;
+}
+
+message ResidenceByIdRequest {
+    string residence_id = 1;
+    string owner_id = 2;
+}
+
+message ResidenceSingleResponse {
+    optional Residence residence = 1;
+}
+
+message ResidenceSingleRequest {
+    Residence residence = 1;
+}
+
+message ResidenceListResponse {
+    repeated Residence residences = 1;
+}
+
+
+message Residence {
+    string id = 1;
+    string building_id = 2;
+    string bucket_id = 3;
+    string owner_id = 4;
+    google.protobuf.Struct metadata = 5;
+}
+
+message Empty {}
+
